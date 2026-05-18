@@ -149,6 +149,44 @@ class TestFromPandas:
         assert "y" in frame.columns
         assert "z" in frame.columns
 
+    def test_string_dtype_roundtrip_with_missing_value(self):
+        df = pd.DataFrame(
+            {
+                "name": pd.Series(
+                    ["a", pd.NA],
+                    dtype=pd.StringDtype(),
+                )
+            }
+        )
+
+        result = ar.to_pandas(ar.from_pandas(df))
+
+        assert str(result["name"].dtype) == "string"
+        assert list(result["name"]) == ["a", pd.NA]
+
+    def test_string_dtype_roundtrip_all_nulls(self):
+        df = pd.DataFrame(
+            {
+                "name": pd.Series(
+                    [pd.NA, pd.NA],
+                    dtype=pd.StringDtype(),
+                )
+            }
+        )
+
+        result = ar.to_pandas(ar.from_pandas(df))
+
+        assert str(result["name"].dtype) == "string"
+        assert result["name"].isna().tolist() == [True, True]
+
+    def test_plain_object_string_column_behavior_unchanged(self):
+        df = pd.DataFrame({"name": ["a", "b"]}, dtype=object)
+
+        result = ar.to_pandas(ar.from_pandas(df))
+
+        assert list(result["name"]) == ["a", "b"]
+        assert str(result["name"].dtype) == "string"
+
     def test_nullable_int64_roundtrip_mixed_values(self):
         df = pd.DataFrame({"id": pd.Series([1, pd.NA, 3], dtype=pd.Int64Dtype())})
 
