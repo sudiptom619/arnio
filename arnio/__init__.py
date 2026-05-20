@@ -47,7 +47,7 @@ from .exceptions import (
     UnknownStepError,
 )
 from .frame import ArFrame
-from .integrations import ArnioPandasAccessor
+from .integrations import ArnioPandasAccessor, register_duckdb
 from .io import (
     read_csv,
     read_csv_chunked,
@@ -143,6 +143,7 @@ __all__ = [
     "from_pandas",
     # Integrations
     "ArnioPandasAccessor",
+    "register_duckdb",
     # Pipeline
     "pipeline",
     "register_step",
